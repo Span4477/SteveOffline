@@ -1,0 +1,15 @@
+{
+    "window" : {
+        "width" : 1280,
+        "height" : 720
+    },
+    "font" : {
+        "name" : "Arial",
+        "size" : 26
+    },
+    "zoom" : {
+        "min" : 10000,
+        "max" : 1000000,
+        "default" : 15000
+    }
+}

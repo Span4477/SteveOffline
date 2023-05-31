@@ -1,0 +1,9 @@
+{
+    "panUp" : "W",
+    "panDown" : "S",
+    "panLeft" : "A",
+    "panRight" : "D",
+    "zoomIn" : "mouseWheelUp",
+    "zoomOut" : "mouseWheelDown",
+    "systemMap" : "M"
+}
