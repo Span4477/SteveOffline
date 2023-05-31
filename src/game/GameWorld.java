@@ -15,6 +15,9 @@ import monitor.TimerDict;
 import readers.GameProperties;
 import readers.ShipProperties;
 import readers.Universe;
+import ui.GridLines;
+import ui.SelectionBox;
+import ui.SystemMap;
 
 import java.awt.Graphics2D;
 import java.awt.Dimension;

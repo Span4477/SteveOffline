@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import readers.Controls;
 import readers.Universe;
+import ui.SystemMap;
 
 public class InputHandler {
 

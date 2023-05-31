@@ -1,4 +1,4 @@
-package game;
+package ui;
 
 import javax.swing.*;
 
@@ -118,7 +118,7 @@ public class SystemMap extends JDialog {
 
         // Load the image
         try {
-            URL resourceUrl = GameWorld.class.getResource(imagePath);
+            URL resourceUrl = getClass().getResource(imagePath);
 
             backgroundImage = ImageIO.read(resourceUrl);
         } catch (IOException e) {

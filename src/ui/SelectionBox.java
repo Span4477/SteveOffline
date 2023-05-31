@@ -1,6 +1,10 @@
-package game;
+package ui;
 import java.awt.*;
 import java.awt.Graphics2D;
+
+import game.Coordinate;
+import game.InputHandler;
+
 import java.awt.Color;
 
 public class SelectionBox {

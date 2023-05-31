@@ -1,7 +1,7 @@
-package game;
+package ui;
 import java.awt.*;
 import javax.swing.*;
-
+import game.CoordinateConvert;
 
 public class GridLines {
 
