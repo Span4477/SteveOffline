@@ -78,10 +78,10 @@ public class OverviewDialog extends JDialog {
         TableRowSorter<OverviewModel> sorter = new TableRowSorter<OverviewModel>(model);
         // When the table sorts by distance (column 1), it should set by the numeric value, not the formatted string
         sorter.setComparator(1, new DistanceComparator());
-        // When the table sorts by velocity (column 2), it should set by the numeric value, not the formatted string
-        sorter.setComparator(2, new VelocityComparator());
-        // When the table sorts by angular velocity (column 3), it should set by the numeric value, not the formatted string
+        // When the table sorts by velocity (column 3), it should set by the numeric value, not the formatted string
         sorter.setComparator(3, new VelocityComparator());
+        // When the table sorts by angular velocity (column 4), it should set by the numeric value, not the formatted string
+        sorter.setComparator(4, new VelocityComparator());
 
 
 
