@@ -158,6 +158,20 @@ public class InputHandler {
 
         
         isDragging = false;
+
+    }
+
+    public void mousePressed(MouseEvent e, Ship s) {
+        System.out.println("Mouse pressed: " + e.getButton() + " at (" + e.getX() + ", " + e.getY() + ")");
+        
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            
+            isDragging = true;
+            dragStart = new Coordinate(e.getX(), e.getY());
+        } else {
+            isDragging = false;
+            dragStart = null;
+        }
         if (e.getButton() == MouseEvent.BUTTON3) {
             // Make the playerSpaceship approach the point
             Coordinate c = convert.windowToGame(e.getX(), e.getY());
@@ -174,16 +188,6 @@ public class InputHandler {
             long y = c.getY();
             s.startWarp(x, y);
             
-        }
-    }
-
-    public void mousePressed(MouseEvent e) {
-        System.out.println("Mouse pressed: " + e.getButton() + " at (" + e.getX() + ", " + e.getY() + ")");
-        
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            
-            isDragging = true;
-            dragStart = new Coordinate(e.getX(), e.getY());
         }
     }
     public void mouseReleased(MouseEvent e, Ship[] ships) {

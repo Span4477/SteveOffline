@@ -16,6 +16,7 @@ import readers.GameProperties;
 import readers.ShipProperties;
 import readers.Universe;
 import ui.GridLines;
+import ui.OverviewDialog;
 import ui.SelectionBox;
 import ui.SystemMap;
 
@@ -45,6 +46,7 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
 
     private TimerTableDialog timerTableDialog;
     private TimerDict timerDict = new TimerDict();
+    private OverviewDialog overviewDialog;
 
     // List of ships
     private Ship[] ships;
@@ -79,7 +81,7 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
             }
             @Override
             public void mousePressed(MouseEvent e) {
-                inputHandler.mousePressed(e);
+                inputHandler.mousePressed(e, playerSpaceship);
             }
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -101,6 +103,7 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
         // Set initial game state variables
         timerTableDialog = new TimerTableDialog(frame, timerDict);
         timerTableDialog.setVisible(true);
+
 
         long startTime = timerDict.time();
         universe = new Universe();
@@ -166,6 +169,8 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
             );
         playerSpaceship.setDisposition(Disposition.PLAYER);
 
+        overviewDialog = new OverviewDialog(frame, universe, ships, playerSpaceship);
+        overviewDialog.setVisible(true);
 
         timerDict.add("initializeGame", startTime);
     }
@@ -198,6 +203,8 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
         SelectionBox.drawSelectionBox(g2d, inputHandler);
         timerDict.add("drawSelectionBox", startTime);
 
+        overviewDialog.setData(universe, ships, playerSpaceship);
+        overviewDialog.update();
         
         timerTableDialog.update();
     }
@@ -366,5 +373,8 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
     }
 
 
+    public Universe getUniverse() {
+        return universe;
+    }
     
 }

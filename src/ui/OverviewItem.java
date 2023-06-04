@@ -21,7 +21,7 @@ public class OverviewItem {
     public OverviewItem(Ship player, Planet planet) {
         this.name = planet.getName();
         this.distance = getDistance(player.getPositionX(), player.getPositionY(), planet.getX(), planet.getY());
-        this.type = "Ship";
+        this.type = "Planet";
         this.velocity = 0;
         this.angularVelocity = 0;
     }
@@ -29,7 +29,7 @@ public class OverviewItem {
     public OverviewItem(Ship player, Gate gate) {
         this.name = gate.getName();
         this.distance = getDistance(player.getPositionX(), player.getPositionY(), gate.getX(), gate.getY());
-        this.type = "Ship";
+        this.type = "Gate";
         this.velocity = 0;
         this.angularVelocity = 0;
     }
