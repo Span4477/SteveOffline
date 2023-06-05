@@ -615,6 +615,14 @@ public class Ship {
         this.warpAcceleration = warpAcceleration;
     }
 
+    public long getWarpStartingX() {
+        return warpStartingX;
+    }
+
+    public long getWarpStartingY() {
+        return warpStartingY;
+    }
+
 
     public boolean isSelected() {
         return selected;
@@ -655,21 +663,38 @@ public class Ship {
         double totalTime = Math.sqrt(Math.pow(approachX - warpStartingX, 2) + Math.pow(approachY - warpStartingY, 2)) / warpVelocity;
         totalTime = Math.max(totalTime, 5);
 
+        if (timeInWarp > totalTime) {
+            this.shipMovementState = ShipMovementState.STOP;
+            this.positionX = approachX;
+            this.positionY = approachY;
+            return;
+        }
+
+        // Calculate the total distance it will take to travel from thes tarting point to the approach point
+        double totalDistance = Math.sqrt(Math.pow(approachX - warpStartingX, 2) + Math.pow(approachY - warpStartingY, 2));
+
+
         // Use a sigmoid function to calculate the new position as a function of timeInWarp
         double warpFactor = 5;
-        double x = approachX - warpStartingX;
-        double y = approachY - warpStartingY;
         double t = timeInWarp;
         double a = warpFunc(totalTime, warpFactor, t);
         
-        double newX = warpStartingX + x * a;
-        double newY = warpStartingY + y * a;
+        // Calculate the new position
+        double newX = warpStartingX + a * (approachX - warpStartingX);
+        double newY = warpStartingY + a * (approachY - warpStartingY);
+
+        // Set the new position
         this.positionX = (long) newX;
         this.positionY = (long) newY;
+
 
     }
 
     private double warpFunc(double t, double w, double x) {
+        // A sigmoid function that returns a value between 0 and 1
+        // t is the total time to reach the destination
+        // w is the warp factor
+        // x is the time traveled so far
         double a = 1 / (1 + Math.exp(-x * w * 2 / t + w));
         double b = 1 / (1 + Math.exp(w));
         double c = 1 / (1 + Math.exp(-w));
@@ -949,7 +974,7 @@ public class Ship {
 
     public void draw(Graphics2D g, CoordinateConvert convert, double deltaTime) {
         // convert game coordinates to screen coordinates
-        Coordinate screenCoordinate = convert.gameToWindow(positionX, positionY);
+        Coordinate screenCoordinate = convert.shipToWindow(positionX, positionY);
         int x = (int) screenCoordinate.getX();
         int y = (int) screenCoordinate.getY();
 
@@ -1026,7 +1051,7 @@ public class Ship {
     }
 
     private void drawWarpLine(Graphics2D g, CoordinateConvert convert, int x, int y) {
-        Coordinate approachScreenCoordinate = convert.gameToWindow((long) approachX, (long) approachY);
+        Coordinate approachScreenCoordinate = convert.shipToWindow((long) approachX, (long) approachY);
         int aX = (int) approachScreenCoordinate.getX();
         int aY = (int) approachScreenCoordinate.getY();
         // Change line color to electric red and thickness to 1
@@ -1041,7 +1066,7 @@ public class Ship {
 
     private void drawApproachLine(Graphics2D g, CoordinateConvert convert, int x, int y) {
 
-        Coordinate approachScreenCoordinate = convert.gameToWindow((long) approachX, (long) approachY);
+        Coordinate approachScreenCoordinate = convert.shipToWindow((long) approachX, (long) approachY);
         int aX = (int) approachScreenCoordinate.getX();
         int aY = (int) approachScreenCoordinate.getY();
         // Change line color to electric blue and thickness to 1

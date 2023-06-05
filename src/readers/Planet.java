@@ -61,7 +61,7 @@ public class Planet {
         }
 
         // Convert the game coordinates to window coordinates
-        Coordinate windowCoords = convert.gameToWindow(getX(), getY());
+        Coordinate windowCoords = convert.planetToWindow(getX(), getY());
         int x = (int) windowCoords.getX() - imageForeground.getWidth(p) / 2;
         int y = (int) windowCoords.getY() - imageForeground.getHeight(p) / 2;
         

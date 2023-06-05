@@ -1,5 +1,4 @@
-package ui;
-
+package ui.overview;
 
 import java.util.Comparator;
 

@@ -1,4 +1,4 @@
-package ui;
+package ui.overview;
 
 import readers.*;
 import game.*;
@@ -43,6 +43,10 @@ public class OverviewModel extends AbstractTableModel{
 
     public String getTypeAt(int row) {
         return data.getItem(row).getType();
+    }
+
+    public OverviewItem getItem(int row) {
+        return data.getItem(row);
     }
 
     @Override

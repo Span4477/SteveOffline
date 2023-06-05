@@ -25,18 +25,15 @@ public class InputHandler {
     private Coordinate dragEnd;
 
     private CoordinateConvert convert;
-    private CoordinateConvert convertPlanet;
 
     private Controls controls = new Controls();
 
     public InputHandler(
         JFrame frame, 
         CoordinateConvert convert, 
-        CoordinateConvert convertPlanet, 
         SystemMap map, 
         Universe universe) {
         this.convert = convert;
-        this.convertPlanet = convertPlanet;
         this.map = map;
         this.frame = frame;
         this.universe = universe;
@@ -44,7 +41,6 @@ public class InputHandler {
 
     public void handleInput(double seconds) {
         long offset = 0;
-        long offsetGame = 0;
         if (
             panUpPressed || 
             panDownPressed || 
@@ -52,23 +48,18 @@ public class InputHandler {
             panRightPressed
         ) {
             offset = (long) (100.0 * seconds);
-            offsetGame = (long) (offset * convert.getScaleFactor());
         }
         if (panUpPressed) {
-            convert.addOffset(0, - offset);
-            convertPlanet.addGameOffset(0, - offsetGame);
+            convert.addShipOffsetFromWindow(0, - offset);
         }
         if (panDownPressed) {
-            convert.addOffset(0, offset);
-            convertPlanet.addGameOffset(0, offsetGame);
+            convert.addShipOffsetFromWindow(0, offset);
         }
         if (panLeftPressed) {
-            convert.addOffset(- offset, 0);
-            convertPlanet.addGameOffset(- offsetGame, 0);
+            convert.addShipOffsetFromWindow(- offset, 0);
         }
         if (panRightPressed) {
-            convert.addOffset(offset, 0);
-            convertPlanet.addGameOffset(offsetGame, 0);
+            convert.addShipOffsetFromWindow(offset, 0);
         }
     }
 
@@ -174,7 +165,7 @@ public class InputHandler {
         }
         if (e.getButton() == MouseEvent.BUTTON3) {
             // Make the playerSpaceship approach the point
-            Coordinate c = convert.windowToGame(e.getX(), e.getY());
+            Coordinate c = convert.windowToShip(e.getX(), e.getY());
             long x = c.getX();
             long y = c.getY();
             s.approach(x, y);
@@ -183,7 +174,7 @@ public class InputHandler {
             System.out.println("Clicked at window coordinates (" + e.getX() + ", " + e.getY() + ")");
         } 
         if (e.getButton() == 5) {
-            Coordinate c = convert.windowToGame(e.getX(), e.getY());
+            Coordinate c = convert.windowToShip(e.getX(), e.getY());
             long x = c.getX();
             long y = c.getY();
             s.startWarp(x, y);
@@ -194,8 +185,8 @@ public class InputHandler {
         
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (isDragging && dragStart != null && dragEnd != null) {
-                Coordinate a = convert.windowToGame(dragStart.getX(), dragStart.getY());
-                Coordinate b = convert.windowToGame(dragEnd.getX(), dragEnd.getY());
+                Coordinate a = convert.windowToShip(dragStart.getX(), dragStart.getY());
+                Coordinate b = convert.windowToShip(dragEnd.getX(), dragEnd.getY());
                 for (Ship s : ships) {
                     //If the ship is within the box created by dragStart and dragEnd, select it
                     if (s.getPositionX() > Math.min(a.getX(), b.getX()) &&
@@ -214,7 +205,7 @@ public class InputHandler {
                 Coordinate c = new Coordinate(e.getX(), e.getY());
                 for (Ship s : ships) {
                     // location of ship on screen
-                    Coordinate shipLocation = convert.gameToWindow(s.getPositionX(), s.getPositionY());
+                    Coordinate shipLocation = convert.shipToWindow(s.getPositionX(), s.getPositionY());
                     // distance from click to ship
                     double distance = Math.sqrt(Math.pow(shipLocation.getX() - c.getX(), 2) + Math.pow(shipLocation.getY() - c.getY(), 2));
                     if (distance < 10) {

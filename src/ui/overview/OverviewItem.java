@@ -1,4 +1,4 @@
-package ui;
+package ui.overview;
 import game.Ship;
 import readers.Planet;
 import readers.Gate;
@@ -9,6 +9,8 @@ public class OverviewItem {
     private String type;
     private double velocity;
     private double angularVelocity;
+    private long x;
+    private long y;
 
     public OverviewItem(Ship player, Ship ship) {
         this.name = ship.getShipName();
@@ -16,6 +18,8 @@ public class OverviewItem {
         this.type = "Ship";
         this.velocity = getVelocity(ship.getVelocityX(), ship.getVelocityY());
         this.angularVelocity = getAngularVelocity(player, ship);
+        this.x = ship.getPositionX();
+        this.y = ship.getPositionY();
     }
     
     public OverviewItem(Ship player, Planet planet) {
@@ -24,6 +28,8 @@ public class OverviewItem {
         this.type = "Planet";
         this.velocity = 0;
         this.angularVelocity = 0;
+        this.x = planet.getX();
+        this.y = planet.getY();
     }
     
     public OverviewItem(Ship player, Gate gate) {
@@ -32,6 +38,8 @@ public class OverviewItem {
         this.type = "Gate";
         this.velocity = 0;
         this.angularVelocity = 0;
+        this.x = gate.getX();
+        this.y = gate.getY();
     }
 
     private double getDistance(long x0, long y0, long x1, long y1) {
@@ -83,6 +91,14 @@ public class OverviewItem {
 
     public double getAngularVelocity() {
         return angularVelocity;
+    }
+
+    public long getX() {
+        return x;
+    }
+
+    public long getY() {
+        return y;
     }
 
 }

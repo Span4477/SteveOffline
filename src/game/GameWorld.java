@@ -16,9 +16,9 @@ import readers.GameProperties;
 import readers.ShipProperties;
 import readers.Universe;
 import ui.GridLines;
-import ui.OverviewDialog;
 import ui.SelectionBox;
 import ui.SystemMap;
+import ui.overview.OverviewDialog;
 
 import java.awt.Graphics2D;
 import java.awt.Dimension;
@@ -30,7 +30,6 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
     private Ship playerSpaceship;
     
     private CoordinateConvert convert;
-    private CoordinateConvert convertPlanet;
     private Thread gameThread;
     private InputHandler inputHandler;
     private SystemMap systemMap;
@@ -56,11 +55,8 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
         
         gameProperties = new GameProperties();
         
-
-
         // Set JPanel size to be the same as the frame size
         setPreferredSize(new Dimension(gameProperties.getWindowWidth(), gameProperties.getWindowHeight()));
-
 
         // Make JPanel focusable to receive key events
         setFocusable(true);
@@ -182,7 +178,7 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
         // Perform rendering of the game world (background, entities, etc.)
 
         long startTime = timerDict.time();
-        universe.draw(g, this, convertPlanet);
+        universe.draw(g, this, convert);
         timerDict.add("setBackgroundImage", startTime);
 
         Graphics2D g2d = (Graphics2D) g;
@@ -237,8 +233,7 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
     public void run() {
 
 
-        System.out.println("scalingFactor = " + gameProperties.getDefaultZoom() + " / " + getWidth());
-        double scalingFactor = gameProperties.getDefaultZoom() / getWidth();
+        
         long planetX = universe.getCurrentPlanet().getX();
         long planetY = universe.getCurrentPlanet().getY();
 
@@ -247,22 +242,17 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
         convert = new CoordinateConvert(
             (long) (getWidth()),
             (long) (getHeight()),
-            (long) (getWidth() * scalingFactor),
-            (long) (getHeight() * scalingFactor),
-            planetX - (long) (getWidth() * scalingFactor / 2),
-            planetY - (long) (getHeight() * scalingFactor / 2)
+            planetX,
+            planetY,
+            planetX,
+            planetY,
+            gameProperties.getDefaultZoom(),
+            384400000.0
         );
-        scalingFactor = 384400000.0 / getWidth();
-        convertPlanet = new CoordinateConvert(
-            (long) (getWidth()),
-            (long) (getHeight()),
-            (long) (getWidth() * scalingFactor),
-            (long) (getHeight() * scalingFactor),
-            planetX - (long) (getWidth() * scalingFactor / 2),
-            planetY - (long) (getHeight() * scalingFactor / 2)
-        );
+        
+        
 
-        inputHandler = new InputHandler(frame, convert, convertPlanet, systemMap, universe);
+        inputHandler = new InputHandler(frame, convert, systemMap, universe);
         
 
         // Add the playerSpaceship to the list of ships
@@ -315,7 +305,7 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
         
         if (!isWarpingCamera) {
             isWarpingCamera = true;
-            Coordinate c = convert.gameToWindow(playerSpaceship.getPositionX(), playerSpaceship.getPositionY());
+            Coordinate c = convert.shipToWindow(playerSpaceship.getWarpStartingX(), playerSpaceship.getWarpStartingY());
             initialWarpOffsetX = c.getX();
             initialWarpOffsetY = c.getY();
         } 
@@ -323,12 +313,9 @@ public class GameWorld extends JPanel implements KeyListener, Runnable, MouseWhe
         long newX = playerSpaceship.getPositionX() - (long) (initialWarpOffsetX * convert.getScaleFactor());
         long newY = playerSpaceship.getPositionY() - (long) (initialWarpOffsetY * convert.getScaleFactor());
 
+        //Set the new offset
+        convert.setShipOffset(newX, newY);
         
-        convertPlanet.addGameOffset(
-            newX - convert.getOffsetX(),
-            newY - convert.getOffsetY());
-        convert.setOffset(newX, newY);
-
     }
 
     @Override

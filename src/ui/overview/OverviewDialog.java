@@ -1,4 +1,4 @@
-package ui;
+package ui.overview;
 
 import readers.*;
 import game.*;
@@ -19,59 +19,54 @@ public class OverviewDialog extends JDialog {
         super(parent, "Overview", false);
 
         model = new OverviewModel(universe, ships, player);
-        table = new JTable(model);
         this.player = player;
         
+        
+        table = new JTable(model);
+        // Make the table selectable
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setRowSelectionAllowed(false);
+        table.setColumnSelectionAllowed(false);
+        table.setCellSelectionEnabled(false);
+        table.setDragEnabled(false);
+
+
         
 
         JScrollPane scrollPane = new JScrollPane(table);
         
         setSize(400, 400);
         setVisible(true);
+        setFocusable(true);
+        
         setLocationRelativeTo(parent);
 
         // put it in the bottom right corner
         setLocation(parent.getWidth() - getWidth(), parent.getHeight() - getHeight());
 
-        // Create and set the content pane
-        // Add mouse listener
-        addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // Handle mouse click event
-
-                handleInput(e);
-                
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                // Handle mouse press event
-                handleInput(e);
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                // Handle mouse release event
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                // Handle mouse enter event
-                System.out.println("Mouse entered");
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                // Handle mouse exit event
-                System.out.println("Mouse exited");
-            }
-        });
-
+        
         // Add the scroll pane to this panel
         add(scrollPane);
 
+        // Add a mouse listener to the table
+        table.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {
+                handleInput(e);
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
         
         
         // Make the table sortable
@@ -82,22 +77,11 @@ public class OverviewDialog extends JDialog {
         sorter.setComparator(3, new VelocityComparator());
         // When the table sorts by angular velocity (column 4), it should set by the numeric value, not the formatted string
         sorter.setComparator(4, new VelocityComparator());
-
-
-
         table.setRowSorter(sorter);
 
 
-        // Make the table selectable
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
         
-
-
-        setFocusable(true);
-        requestFocusInWindow();
-
-
 
     }
 
@@ -124,22 +108,18 @@ public class OverviewDialog extends JDialog {
         
         if (e.getButton() == MouseEvent.BUTTON3) {
             
-            // Make the playerSpaceship approach the point
-            // Coordinate c = convert.windowToGame(e.getX(), e.getY());
-            // long x = c.getX();
-            // long y = c.getY();
-            // s.approach(x, y);
+            // Make the playerSpaceship approach the table item
+            OverviewItem i = model.getItem(row);
+            player.approach(i.getX(), i.getY());
 
-            
         } 
         if (e.getButton() == 5) {
-            // Coordinate c = convert.windowToGame(e.getX(), e.getY());
-            // long x = c.getX();
-            // long y = c.getY();
-            // s.startWarp(x, y);
+
+            // Warp to the item
+            OverviewItem i = model.getItem(row);
+            player.startWarp(i.getX(), i.getY());
             
         }
-
 
     }
     
